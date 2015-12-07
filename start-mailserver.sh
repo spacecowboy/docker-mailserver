@@ -123,6 +123,7 @@ cron
 /etc/init.d/spamassassin start
 /etc/init.d/clamav-daemon start
 /etc/init.d/amavis start
+/etc/init.d/postgrey start
 /etc/init.d/postfix start
 
 echo "Listing SASL users"
