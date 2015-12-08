@@ -122,6 +122,7 @@ echo "Configuring opendkim"
 # Typically /etc/opendkim/keys
 BASE="/etc/opendkim/keys"
 
+cd "$BASE"
 for domain in *
 do
   #pushd "$domain"
