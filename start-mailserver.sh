@@ -113,6 +113,24 @@ echo "required_score 5" >> /etc/mail/spamassassin/local.cf
 echo "rewrite_header Subject ***SPAM***" >> /etc/mail/spamassassin/local.cf
 cp /tmp/spamassassin/rules.cf /etc/spamassassin/
 
+echo "Configuring opendkim"
+# Typically /etc/opendkim/keys
+pushd "/etc/opendkim/keys"
+
+for domain in *
+do
+  pushd "$domain"
+  grep dummy mail.private && \
+    echo "Generating dkim key for $domain..." && \
+    opendkim-genkey -s mail -d "$domain" && \
+    echo "Key generated complete. Your public key is:" && \
+    cat "mail.txt"
+  chown opendkim:opendkim mail.private
+  popd
+done
+
+popd
+
 echo "Starting daemons"
 cron
 /etc/init.d/rsyslog start
@@ -124,6 +142,7 @@ cron
 /etc/init.d/clamav-daemon start
 /etc/init.d/amavis start
 /etc/init.d/postgrey start
+/etc/init.d/opendkim start
 /etc/init.d/postfix start
 
 echo "Listing SASL users"
