@@ -115,21 +115,23 @@ cp /tmp/spamassassin/rules.cf /etc/spamassassin/
 
 echo "Configuring opendkim"
 # Typically /etc/opendkim/keys
-pushd "/etc/opendkim/keys"
+BASE="/etc/opendkim/keys"
 
 for domain in *
 do
-  pushd "$domain"
+  #pushd "$domain"
+  cd "$BASE/$domain"
   grep dummy mail.private && \
     echo "Generating dkim key for $domain..." && \
     opendkim-genkey -s mail -d "$domain" && \
     echo "Key generated complete. Your public key is:" && \
-    cat "mail.txt"
+    cat "$BASE/$domain/mail.txt"
   chown opendkim:opendkim mail.private
-  popd
+  #popd
 done
 
-popd
+#popd
+cd /
 
 echo "Starting daemons"
 cron
